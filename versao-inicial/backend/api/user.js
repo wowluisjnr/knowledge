@@ -11,6 +11,9 @@ module.exports = app =>{
     const save = async (req, res) =>{
         const user = {...req.body}
         if(req.params.id) user.id = req.params.id
+
+        if(!req.originalUrl.startsWith('/users')) user.admin = false  //pra ser admin tem que startar com /users
+        if(!req.user || !req.user.admin) user.admin = false
         
         try {
             existsOrError(user.name, 'Nome não informado')
