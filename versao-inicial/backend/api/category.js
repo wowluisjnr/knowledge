@@ -15,7 +15,7 @@ module.exports = app=>{
             app.db('categories')
                 .update(category)
                 .where({id: category.id })
-                .then(_=> res.status(500).send())
+                .then(_=> res.status(204).send())
         } else {
             app.db('categories')
                 .insert(category)
@@ -33,7 +33,7 @@ module.exports = app=>{
             notExistsOrError(subcategory, 'Categoria possui subcategorias.')
 
             const articles = await app.db('articles')
-                .where({ catagoryId: req.params.id })
+                .where({ categoryId: req.params.id })
             notExistsOrError(articles, 'Categoria possui artigos.')
 
             const rowsDeleted = await app.db('categories')
