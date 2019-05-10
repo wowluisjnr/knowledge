@@ -1,19 +1,24 @@
 <template>
     <div class="category-admin">
         <b-form>
-            <input id="user-id" type="hidden" v-model="category.id" />
+            <input id="category-id" type="hidden" v-model="category.id" />
                 
 
             <b-form-group label="Nome da Categoria:" label-for="category-name">
                 <b-form-input id="category-name" type="text"
                     v-model="category.name" required 
-                    placeholder="Informe o Nome da Categoria..." />
+                    placeholder="Informe o Nome da Categoria..." 
+                    :readonly="mode!=='save'"/>
             </b-form-group>
 
             <b-form-group label="Categoria Pai:" label-for="category-parentId">
-                <b-form-select id="category-parentId" 
+                <b-form-select v-if="mode==='save'" id="category-parentId" 
                     v-model="category.parentId" 
                     :options="categories"></b-form-select>
+                <b-form-input v-else
+                    id="category-parentId" type="text"
+                    v-model="category.path"
+                    readonly />
             </b-form-group>
             
 
@@ -75,9 +80,9 @@ export default {
         save(){
             const method = this.category.id ? 'put' : 'post'
             const id = this.category.id ? `/${this.category.id}` : ''
-            const categorySave = {name: this.category.name, parentId:this.category.parentId}
+            //const categorySave = {name: this.category.name, parentId:this.category.parentId}
             //console.log(method, id)
-            axios[method](`${baseApiUrl}/categories${id}`, categorySave)
+            axios[method](`${baseApiUrl}/categories${id}`, this.category)
                 .then(()=>{
                     this.$toasted.global.defaultSuccess()
                     this.reset()
